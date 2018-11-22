@@ -9,6 +9,7 @@ from rest_framework.generics import (
 from .serializers import (
 	UserCreateSerializer,
 	ItemListSerializer,
+	ItemDetailSerializer,
 )
 
 
@@ -19,5 +20,10 @@ class UserCreateAPIView(CreateAPIView):
 class ItemListAPIView(ListAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemListSerializer
+
+
+class ItemDetailAPIView(RetrieveAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemDetailSerializer
     lookup_field = 'id'
     lookup_url_kwarg = 'item_id'

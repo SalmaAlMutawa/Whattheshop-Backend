@@ -23,7 +23,19 @@ class ItemListSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
+            'category',
+            'price',
+            'image',
+            ]
+
+class ItemDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = [
+            'id',
+            'name',
             'description',
             'category',
             'price',
+            'image',
             ]
