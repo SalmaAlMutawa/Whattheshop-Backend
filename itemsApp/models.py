@@ -8,6 +8,9 @@ class Item(models.Model):
 	price = models.DecimalField(max_digits=10, decimal_places=2)
 	image = models.ImageField(upload_to='item_pics', null=True, blank=True)
 
+	def __str__(self):
+		return self.name
+
 class Address(models.Model):
 	user= models.ForeignKey(User, on_delete=models.CASCADE)
 	area= models.CharField(max_length=120)

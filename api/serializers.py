@@ -129,3 +129,13 @@ class AddressCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         exclude=["user"]
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Order
+        exclude=["user"]
+
+class MiddleManSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=MiddleMan
+        fields= '__all__'
