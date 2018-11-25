@@ -15,6 +15,7 @@ from .serializers import (
 	ItemListSerializer,
 	ItemDetailSerializer,
     UserLoginSerializer,
+    AddressCreateSerializer,
  )
 
 class UserCreateAPIView(CreateAPIView):
@@ -28,11 +29,9 @@ class UserLoginAPIView(APIView):
         serializer = UserLoginSerializer(data=my_data)
         if serializer.is_valid(raise_exception=True):
             valid_data = serializer.data
+            print(valid_data)
             return Response(valid_data, status=HTTP_200_OK)
         return Response(serializer.errors, HTTP_400_BAD_REQUEST)
-
-
-
 
 class ItemListAPIView(ListAPIView):
     queryset = Item.objects.all()
@@ -44,3 +43,9 @@ class ItemDetailAPIView(RetrieveAPIView):
     serializer_class = ItemDetailSerializer
     lookup_field = 'id'
     lookup_url_kwarg = 'item_id'
+
+    class AddressCreateAPIView(CreateAPIView):
+        serializer_class= AddressCreateSerializer
+
+        def perform_create(self,serializer):
+            serializer.save(user=self.request.user)
