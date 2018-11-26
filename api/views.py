@@ -1,6 +1,7 @@
-from itemsApp.models import Item
+from itemsApp.models import (Item, Order, MiddleMan, Address)
+from django.contrib.auth.models import User
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.generics import (
@@ -19,6 +20,8 @@ from .serializers import (
     OrderSerializer,
     MiddleManSerializer,
  )
+
+
 
 class UserCreateAPIView(CreateAPIView):
     serializer_class = UserCreateSerializer
@@ -57,12 +60,13 @@ class OrderAPIView(APIView):
 
 
     def post(self,request):
-        order_obj=Order.objects.create(user=request.user, address=request.user.address)
+        order_obj=Order.objects.create(user=request.user, #address=request.user.address
+        )
 
         for obj in request.data:
-            serializer=MiddleManSerializer(data=obj)
-            order_obj.middleman_set.add(obj)
-            order_obj.save()
-            print(obj)
-        order_serializer = OrderSerializer(order_obj)
-        return Response(order_serializer.data, status=HTTP_201_CREATED)
+            middle_man_obj = MiddleMan.objects.create(
+            item= Item.objects.get(id=obj['itemID']), quantity=obj['quantity'],
+            order=order_obj)
+            print("Hiii")
+
+        return Response({"msg":"Hamza is cool"}, status=HTTP_201_CREATED)
