@@ -12,7 +12,7 @@ class Item(models.Model):
 		return self.name
 
 class Address(models.Model):
-	user= models.ForeignKey(User, on_delete=models.CASCADE)
+	# user= models.ForeignKey(User, on_delete=models.CASCADE)
 	area= models.CharField(max_length=120)
 	block = models.PositiveIntegerField(default=1)
 	avenue=models.CharField(max_length=200, null=True, blank=True)
@@ -23,7 +23,7 @@ class Address(models.Model):
 
 class Order(models.Model):
 	user=models.ForeignKey(User, on_delete=models.CASCADE)
-	address=models.ForeignKey(Address, on_delete=models.CASCADE)
+	# address=models.ForeignKey(Address, on_delete=models.CASCADE)
 
 class MiddleMan(models.Model):
 	item=models.ForeignKey(Item, on_delete=models.CASCADE)
