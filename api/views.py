@@ -35,7 +35,6 @@ class UserLoginAPIView(APIView):
         serializer = UserLoginSerializer(data=my_data)
         if serializer.is_valid(raise_exception=True):
             valid_data = serializer.data
-            print(valid_data)
             return Response(valid_data, status=HTTP_200_OK)
         return Response(serializer.errors, HTTP_400_BAD_REQUEST)
 

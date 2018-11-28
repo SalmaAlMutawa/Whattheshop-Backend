@@ -72,20 +72,18 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.Serializer):
-    email = serializers.CharField()
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
     token = serializers.CharField(read_only=True, allow_blank=True)
 
     def validate(self, data):
-        my_email = data.get('email')
         my_username = data.get('username')
         my_password = data.get('password')
 
         try:
-            user_obj = User.objects.get(email=my_email)
+            user_obj = User.objects.get(username=my_username)
         except:
-            raise serializers.ValidationError("This email does not exist")
+            raise serializers.ValidationError("This username does not exist")
 
         if not user_obj.check_password(my_password):
             raise serializers.ValidationError("Incorrect username/password combination!")
