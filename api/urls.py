@@ -6,6 +6,8 @@ from .views import (
 	UserLoginAPIView,
 	OrderAPIView,
 	AddressCreateAPIView,
+	PrevOrdersAPIView,
+	AddressListAPIView,
 )
 from rest_framework_jwt.views import obtain_jwt_token
 
@@ -17,5 +19,8 @@ urlpatterns = [
     path('<int:item_id>/detail/', ItemDetailAPIView.as_view(), name='detail'),
 
 	path('order/', OrderAPIView.as_view(), name='order'),
+	path('prevorders/', PrevOrdersAPIView.as_view(), name='prev-orders'),
+
 	path('address/', AddressCreateAPIView.as_view(), name='address'),
+	path('addresslist/<int:user_id>', AddressListAPIView.as_view(), name='address-list'),
 ]

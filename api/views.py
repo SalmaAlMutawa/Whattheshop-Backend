@@ -19,6 +19,7 @@ from .serializers import (
     AddressCreateSerializer,
     OrderSerializer,
     MiddleManSerializer,
+    ItemSerializer,
  )
 
 
@@ -52,13 +53,11 @@ class ItemDetailAPIView(RetrieveAPIView):
 class AddressCreateAPIView(CreateAPIView):
     serializer_class= AddressCreateSerializer
 
-    def perform_create(self,serializer):
-        serializer.save(user=self.request.user)
+    # def perform_create(self,serializer):
+    #     serializer.save(user=self.request.user)
 
 
 class OrderAPIView(APIView):
-
-
     def post(self,request):
         order_obj=Order.objects.create(user=request.user, #address=request.user.address
         )
@@ -67,6 +66,22 @@ class OrderAPIView(APIView):
             middle_man_obj = MiddleMan.objects.create(
             item= Item.objects.get(id=obj['itemID']), quantity=obj['quantity'],
             order=order_obj)
-            print("Hiii")
 
         return Response({"msg":"Hamza is cool"}, status=HTTP_201_CREATED)
+
+class PrevOrdersAPIView(ListAPIView):
+    serializer_class=OrderSerializer
+    permission_classes=[IsAuthenticated]
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
+
+
+
+
+class AddressListAPIView(RetrieveAPIView):
+    queryset=Address.objects.all()
+    serializer_class=AddressCreateSerializer
+    lookup_field="user"
+    lookup_url_kwarg="user_id"
+    permission_classes=[IsAuthenticated]

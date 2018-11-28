@@ -97,7 +97,6 @@ class UserLoginSerializer(serializers.Serializer):
         token = jwt_encode_handler(payload)
 
         data["token"] = token
-        print(data)
         return data
 
 
@@ -125,17 +124,32 @@ class ItemDetailSerializer(serializers.ModelSerializer):
             'image',
             ]
 
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = [
+            'id',
+            'name',
+            'category',
+            'price',
+            ]
+
 class AddressCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        exclude=["user"]
-
-class OrderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Order
-        exclude=["user"]
+        # exclude=["user"]
+        fields = ['area', 'block', 'avenue', 'street', 'house', 'extra_instructions']
 
 class MiddleManSerializer(serializers.ModelSerializer):
+    item=ItemSerializer()
     class Meta:
         model=MiddleMan
         fields= '__all__'
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    middle_man=MiddleManSerializer(many=True)
+
+    class Meta:
+        model=Order
+        fields=["id", "date", "middle_man"]
