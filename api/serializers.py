@@ -3,55 +3,7 @@ from rest_framework import serializers
 from itemsApp.models import Item, MiddleMan,Address, Order
 from rest_framework_jwt.settings import api_settings
 
-
-import uuid
-import warnings
-from calendar import timegm
-from datetime import datetime
-from rest_framework_jwt.compat import get_username
-from rest_framework_jwt.compat import get_username_field
-
-
-def jwt_payload_handler(user):
-    username_field = get_username_field()
-    username = get_username(user)
-
-    warnings.warn(
-        'The following fields will be removed in the future: '
-        '`email` and `user_id`. ',
-        DeprecationWarning
-    )
-
-    payload = {
-        'user_id': user.pk,
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-        'email': user.email,
-        'username': username,
-        'exp': datetime.utcnow() + api_settings.JWT_EXPIRATION_DELTA
-    }
-    if hasattr(user, 'email'):
-        payload['email'] = user.email
-    if isinstance(user.pk, uuid.UUID):
-        payload['user_id'] = str(user.pk)
-
-    payload[username_field] = username
-
-    # Include original issued at time for a brand new token,
-    # to allow token refresh
-    if api_settings.JWT_ALLOW_REFRESH:
-        payload['orig_iat'] = timegm(
-            datetime.utcnow().utctimetuple()
-        )
-
-    if api_settings.JWT_AUDIENCE is not None:
-        payload['aud'] = api_settings.JWT_AUDIENCE
-
-    if api_settings.JWT_ISSUER is not None:
-        payload['iss'] = api_settings.JWT_ISSUER
-
-    return payload
-
+from .jwt_payload import jwt_payload_handler
 
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -88,7 +40,6 @@ class UserLoginSerializer(serializers.Serializer):
         if not user_obj.check_password(my_password):
             raise serializers.ValidationError("Incorrect username/password combination!")
 
-        # jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
         jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
         payload = jwt_payload_handler(user_obj)
@@ -126,9 +77,7 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = [
-            'id',
             'name',
-            'category',
             'price',
             ]
 

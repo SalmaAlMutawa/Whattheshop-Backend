@@ -22,5 +22,5 @@ urlpatterns = [
 	path('prevorders/', PrevOrdersAPIView.as_view(), name='prev-orders'),
 
 	path('address/', AddressCreateAPIView.as_view(), name='address'),
-	path('addresslist/<int:user_id>', AddressListAPIView.as_view(), name='address-list'),
+	path('addresslist/<int:user_id>/', AddressListAPIView.as_view(), name='address-list'),
 ]
